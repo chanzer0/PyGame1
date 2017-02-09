@@ -24,8 +24,8 @@
       <file leaf-file-name="pgame1.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pgame1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="126" column="21" selection-start-line="126" selection-start-column="21" selection-end-line="126" selection-end-column="21" />
+            <state relative-caret-position="699">
+              <caret line="137" column="30" selection-start-line="137" selection-start-column="30" selection-end-line="137" selection-end-column="30" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -285,7 +285,14 @@
       <option name="project" value="LOCAL" />
       <updated>1486598137530</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Improvement upon projectiles, [WIP]">
+      <created>1486603812337</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1486603812337</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -334,7 +341,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Progress on user and AI movement" />
     <MESSAGE value="Player and AI movement complete, beginning work on Projectiles" />
-    <option name="LAST_COMMIT_MESSAGE" value="Player and AI movement complete, beginning work on Projectiles" />
+    <MESSAGE value="Improvement upon projectiles, [WIP]" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improvement upon projectiles, [WIP]" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -355,8 +363,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pgame1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="126" column="21" selection-start-line="126" selection-start-column="21" selection-end-line="126" selection-end-column="21" />
+        <state relative-caret-position="699">
+          <caret line="137" column="30" selection-start-line="137" selection-start-column="30" selection-end-line="137" selection-end-column="30" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

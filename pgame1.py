@@ -6,7 +6,7 @@ class Projectile(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.rect = pygame.Rect(self.x - 2, self.y - 2, 4, 12)
+        self.rect = pygame.Rect(self.x, self.y, 4, 12)
 
     def set_pos(self, x, y):
         self.rect.move(x, y)
@@ -36,7 +36,7 @@ class Player(object):
     def draw(self, view):
         pygame.draw.rect(view, (200, 0, 200), self.rect)
 
-# Create class for Enemy(AI-controlled)
+# Create class for Enemy("AI"-controlled)
 class Enemy(object):
     def __init__(self, x, y, dx):
         self.dx = dx
@@ -93,7 +93,7 @@ j = 0
 time = 0
 flag = False
 
-# Create projectiles off screen, will reset position later
+# Create projectiles , position will be reset later
 u_projectile = [Projectile(0, 0) for _ in range(500)]
 
 # Begin the loop where the game operates - Quit loop when user runs out of lives
@@ -106,7 +106,7 @@ while user.lives != 0:
     if event.type == pygame.K_ESCAPE:
         user.remove_life(3)
 
-    # Use arrow keys to move player left & right, launch projectiles
+    # Use arrow keys to move player left & right, space to launch projectiles
     key = pygame.key.get_pressed()
     if 0 <= user.rect.x <= 800:
         if key[pygame.K_LEFT]:
@@ -136,7 +136,6 @@ while user.lives != 0:
 
 
 for projectiles in range(500):
-    print(u_projectile[projectiles].x)
-    print(u_projectile[projectiles].y)
-
+    print("x: ", u_projectile[projectiles].x)
+    print("y: ", u_projectile[projectiles].y)
 pygame.quit()
