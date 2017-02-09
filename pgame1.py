@@ -8,7 +8,10 @@ class Projectile(object):
         self.y = y
         self.rect = pygame.Rect(self.x - 2, self.y - 2, 4, 12)
 
-    def launch_projectile(self):
+    def set_pos(self, x, y):
+        self.rect.move(x, y)
+
+    def move(self):
         self.rect.y -= 5
 
     def draw(self, view):
@@ -61,7 +64,7 @@ def update():
     enemy2.draw(game_view)
     enemy3.draw(game_view)
     enemy4.draw(game_view)
-    user_projectile.draw(game_view)
+    u_projectile[j].draw(game_view)
     pygame.display.flip()
 
 
@@ -81,18 +84,17 @@ game_view_rect = game_view.get_rect()
 
 # Initiate user and AI sprites
 user = Player()
-enemy1 = Enemy(1, 1, 1)
+enemy1 = Enemy(1, 0, 1)
 enemy2 = Enemy(200, 100, 4)
 enemy3 = Enemy(400, 200, 2)
 enemy4 = Enemy(600, 300, 4)
 i = 0
 j = 0
-user_projectile = Projectile(0, 0)
+time = 0
+flag = False
 
-# Create a list of projectiles to be fired later
-projectiles = []
-for count in range(1500):
-    projectiles.append(Projectile(0, 0))
+# Create projectiles off screen, will reset position later
+u_projectile = [Projectile(0, 0) for _ in range(500)]
 
 # Begin the loop where the game operates - Quit loop when user runs out of lives
 while user.lives != 0:
@@ -104,7 +106,7 @@ while user.lives != 0:
     if event.type == pygame.K_ESCAPE:
         user.remove_life(3)
 
-    # Use arrow keys to move player left & right
+    # Use arrow keys to move player left & right, launch projectiles
     key = pygame.key.get_pressed()
     if 0 <= user.rect.x <= 800:
         if key[pygame.K_LEFT]:
@@ -112,20 +114,29 @@ while user.lives != 0:
         if key[pygame.K_RIGHT]:
             user.move(1)
         if key[pygame.K_SPACE]:
-            user_projectile = projectiles[j]
+            flag = True
+        if flag is True and pygame.time.get_ticks() - time >= 1000:
+            u_projectile[j].set_pos(user.rect.x, user.rect.y)
             j += 1
+            time = pygame.time.get_ticks()
+            flag = False
 
-    # Update AI positions every 10 iterations
+    # Update AI positions & projectiles every 10 iterations
     if i % 10 == 0:
         enemy1.move()
         enemy2.move()
         enemy3.move()
         enemy4.move()
-
-    # Fire projectiles at user
+        for _ in range(0, j):
+            u_projectile[_].move()
 
     # Populate the game_view
     update()
     i += 1
+
+
+for projectiles in range(500):
+    print(u_projectile[projectiles].x)
+    print(u_projectile[projectiles].y)
 
 pygame.quit()
