@@ -1,5 +1,6 @@
 import os
 import pygame
+import sys
 import random
 
 WHITE = (255, 255, 255)
@@ -8,6 +9,7 @@ RED = (255, 0, 0)
 GREY = (30, 30, 30)
 clock = pygame.time.Clock()
 time = pygame.time.get_ticks()
+score = 0
 
 
 # Create class for Projectile
@@ -21,9 +23,9 @@ class Projectile(pygame.sprite.Sprite):
 
     def update(self):
         if self.direction == "up":
-            self.rect.y += 5
-        if self.direction == "down":
             self.rect.y -= 5
+        if self.direction == "down":
+            self.rect.y += 5
 
 # Create class for Player(user-controlled)
 class Player(pygame.sprite.Sprite):
@@ -38,9 +40,9 @@ class Player(pygame.sprite.Sprite):
         self.lives -= lives
 
     def move(self, a):
-        if a == 1 and self.rect.x < 1024:
+        if a == 1 and self.rect.right < 1024:
             self.rect.x += 5
-        if a == -1 and self.rect.x > 0:
+        if a == -1 and self.rect.left > 0:
             self.rect.x -= 5
 
 
@@ -71,13 +73,20 @@ def update():
     enemy3.update("left")
     enemy4.update("right")
     enemy5.update("right")
+
+    score_text = my_font.render("Score " + str(score), 1, WHITE)
+    game_view.blit(score_text, (5, height - 10))
+
     game_view.convert()
     game_view.fill(GREY)
-    all_sprites_list.draw(game_view)
+
+    all_enemies.draw(game_view)
+    user_list.draw(game_view)
     bullet_list.draw(game_view)
+
     bullet_list.update()
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(90)
 
 
 # Center the game window & start the environment
@@ -126,13 +135,17 @@ bullet_list = pygame.sprite.Group()
 
 
 # List of all game objects
-all_sprites_list = pygame.sprite.Group()
-all_sprites_list.add(user)
-all_sprites_list.add(enemy1)
-all_sprites_list.add(enemy2)
-all_sprites_list.add(enemy3)
-all_sprites_list.add(enemy4)
-all_sprites_list.add(enemy5)
+all_enemies = pygame.sprite.Group()
+user_list = pygame.sprite.Group()
+user_list.add(user)
+all_enemies.add(enemy1)
+all_enemies.add(enemy2)
+all_enemies.add(enemy3)
+all_enemies.add(enemy4)
+all_enemies.add(enemy5)
+
+# Create text to display lives and score
+my_font = pygame.font.SysFont("monospace", 16)
 
 
 # Begin the loop where the game operates - Quit loop when user runs out of lives
@@ -150,13 +163,18 @@ while user.lives != 0:
     if key[pygame.K_LEFT]:
         user.move(-1)
     if key[pygame.K_SPACE]:
-        if time - pygame.time.get_ticks() >= 500:
+        if pygame.time.get_ticks() - time >= 300:
             bullet = Projectile("up")
-            bullet.rect.x = (user.rect.x - user.rect.y) / 2
+            bullet.rect.x = (user.rect.left + (user.rect.right - user.rect.left) / 2.65)
             bullet.rect.y = user.rect.top
             bullet_list.add(bullet)
+            time = pygame.time.get_ticks()
 
     # Have enemies randomly shoot bullets
+
+    # Handle collisions
+    if pygame.sprite.groupcollide(bullet_list, all_enemies, True, True):
+        score += 100
 
     # Update screen and draw sprites
     update()
