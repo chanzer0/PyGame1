@@ -2,9 +2,9 @@ import os
 import pygame
 import sys
 import random
-import Projectile.py
-import Enemy.py
-import Player.py
+import Projectile
+import Enemy
+import Player
 
 # Define constants
 WHITE = (255, 255, 255)
@@ -14,115 +14,50 @@ GREY = (30, 30, 30)
 clock = pygame.time.Clock()
 time = pygame.time.get_ticks()
 
-# Create method holding all "update" actions
-def update():
-    enemy1.update("left")
-    enemy2.update("left")
-    enemy3.update("left")
-    enemy4.update("right")
-    enemy5.update("right")
-
-    score_text = my_font.render("Score " + str(score), 1, WHITE)
-    game_view.blit(score_text, (5, height - 10))
-
-    game_view.convert()
-    game_view.fill(GREY)
-
-    all_enemies.draw(game_view)
-    user_list.draw(game_view)
-    bullet_list.draw(game_view)
-
-    bullet_list.update()
-    pygame.display.flip()
-    clock.tick(90)
-
-
-# Center the game window & start the environment
+# Center the game window & start the environment, set up display
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pygame.init()
-
-
-# Set up the display
 pygame.display.set_caption("Shoot the enemy tie fighters to escape the Imperial fleet")
-screen_width = 1024
-screen_height = 768
-game_view = pygame.display.set_mode([screen_width, screen_height])
+game_view = pygame.display.set_mode([1024, 768])
 game_view_rect = game_view.get_rect()
 
 
-# Create user avatar
-height = 128
-width = 128
-user = Player()
-user.rect.x = (screen_width * 0.5) - (width / 2)
-user.rect.y = (screen_height * 0.9) - (height / 2)
+def __main__():
+    # Create user sprite
+    user = Player.Player()
 
-# Create enemies
-enemy1 = Enemy()
-enemy1.rect.x = (screen_width * 0.25) - (width / 2)
-enemy1.rect.y = (screen_height * 0.15) - (height / 2)
+    # Create enemies
+    enemy_list = []
+    for enemy in range(0,1):
+        enemy = Enemy.Enemy()
+        enemy_list.append(enemy)
 
-enemy2 = Enemy()
-enemy2.rect.x = (screen_width * 0.5) - (width / 2)
-enemy2.rect.y = (screen_height * 0.15) - (height / 2)
+    # Begin the loop where the game operates - Quit loop when user runs out of lives
+    while user.lives != 0:
 
-enemy3 = Enemy()
-enemy3.rect.x = (screen_width * 0.75) - (width / 2)
-enemy3.rect.y = (screen_height * 0.15) - (height / 2)
+        # Quit the game if QUIT is initiated
+        event = pygame.event.poll()
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
-enemy4 = Enemy()
-enemy4.rect.x = (screen_width * 0.33) - (width / 2)
-enemy4.rect.y = (screen_height * 0.45) - (height / 2)
+        # Handle key inputs
+        key = pygame.key.get_pressed()
+        if key[pygame.K_RIGHT]:
+            user.move(1)
+        if key[pygame.K_LEFT]:
+            user.move(-1)
 
-enemy5 = Enemy()
-enemy5.rect.x = (screen_width * 0.66) - (width / 2)
-enemy5.rect.y = (screen_height * 0.45) - (height / 2)
-
-# Create bullet list
-bullet_list = pygame.sprite.Group()
+        # Update screen and draw sprites
 
 
-# List of all game objects
-all_enemies = pygame.sprite.Group()
-user_list = pygame.sprite.Group()
-user_list.add(user)
-all_enemies.add(enemy1)
-all_enemies.add(enemy2)
-all_enemies.add(enemy3)
-all_enemies.add(enemy4)
-all_enemies.add(enemy5)
 
-# Create text to display lives and score
-my_font = pygame.font.SysFont("monospace", 16)
+# Create method holding all "update" actions
+def update(enemy_list, user):
+    for enemy in enemy_list:
+        enemy.draw(game_view)
 
+    user.draw(game_view)
 
-# Begin the loop where the game operates - Quit loop when user runs out of lives
-while user.lives != 0:
-
-    # Quit the game if QUIT is initiated
-    event = pygame.event.poll()
-    if event.type == pygame.QUIT:
-        user.remove_life(3)
-
-    # Handle key inputs
-    key = pygame.key.get_pressed()
-    if key[pygame.K_RIGHT]:
-        user.move(1)
-    if key[pygame.K_LEFT]:
-        user.move(-1)
-    if key[pygame.K_SPACE]:
-        if pygame.time.get_ticks() - time >= 300:
-            bullet = Projectile("up")
-            bullet.rect.x = (user.rect.left + (user.rect.right - user.rect.left) / 2.65)
-            bullet.rect.y = user.rect.top
-            bullet_list.add(bullet)
-            time = pygame.time.get_ticks()
-
-    # Have enemies randomly shoot bullets
-
-    # Handle collisions
-    if pygame.sprite.groupcollide(bullet_list, all_enemies, True, True):
-        score += 100
-
-    # Update screen and draw sprites
-    update()
+    pygame.display.update()
+    clock.tick(90)
