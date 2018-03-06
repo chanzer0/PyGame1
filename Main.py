@@ -2,69 +2,17 @@ import os
 import pygame
 import sys
 import random
+import Projectile.py
+import Enemy.py
+import Player.py
 
+# Define constants
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREY = (30, 30, 30)
 clock = pygame.time.Clock()
 time = pygame.time.get_ticks()
-score = 0
-
-
-# Create class for Projectile
-class Projectile(pygame.sprite.Sprite):
-    def __init__(self, direction):
-        super().__init__()
-        self.image = pygame.image.load("C:/Users/seans/PycharmProjects/PyGame1/bullet.png").convert_alpha()
-        self.image.set_colorkey(WHITE)
-        self.rect = self.image.get_rect()
-        self.direction = direction
-
-    def update(self):
-        if self.direction == "up":
-            self.rect.y -= 5
-        if self.direction == "down":
-            self.rect.y += 5
-
-# Create class for Player(user-controlled)
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load("C:/Users/seans/PycharmProjects/PyGame1/millenium_falcon.png").convert_alpha()
-        self.image.set_colorkey(WHITE)
-        self.rect = self.image.get_rect()
-        self.lives = 3
-
-    def remove_life(self, lives):
-        self.lives -= lives
-
-    def move(self, a):
-        if a == 1 and self.rect.right < 1024:
-            self.rect.x += 5
-        if a == -1 and self.rect.left > 0:
-            self.rect.x -= 5
-
-
-# Create class for enemy("AI"-controlled)
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load("C:/Users/seans/PycharmProjects/PyGame1/tie_fighter.png").convert_alpha()
-        self.image.set_colorkey(WHITE)
-        self.rect = self.image.get_rect()
-
-    def update(self, direction):
-        dist = 3
-        if direction == "left":
-            self.rect.x -= dist
-            if self.rect.left <= 0:
-                self.rect.left = 1024
-        if direction == "right":
-            self.rect.x += dist
-            if self.rect.left >= 1024:
-                self.rect.right = 0
-
 
 # Create method holding all "update" actions
 def update():
