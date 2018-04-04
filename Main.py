@@ -6,14 +6,6 @@ import Projectile
 import Enemy
 import Player
 
-# Define constants
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREY = (30, 30, 30)
-clock = pygame.time.Clock()
-time = pygame.time.get_ticks()
-
 # Center the game window & start the environment, set up display
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pygame.init()
@@ -27,12 +19,9 @@ def __main__():
     user = Player.Player()
 
     # Create enemies
-    enemy_list = []
-    for enemy in range(0,1):
-        enemy = Enemy.Enemy()
-        enemy_list.append(enemy)
+    enemies = make_enemies(7)
 
-    # Begin the loop where the game operates - Quit loop when user runs out of lives
+    # Main game loop
     while user.lives != 0:
 
         # Quit the game if QUIT is initiated
@@ -41,23 +30,35 @@ def __main__():
             pygame.quit()
             sys.exit()
 
-        # Handle key inputs
-        key = pygame.key.get_pressed()
-        if key[pygame.K_RIGHT]:
-            user.move(1)
-        if key[pygame.K_LEFT]:
-            user.move(-1)
+        # Drawing
+        enemies.draw(game_view)
 
-        # Update screen and draw sprites
+        # Updates
+        update_game()
 
+def make_enemies(n):
+    enemy_list = pygame.sprite.Group()
+    offset = 86
+    for enemy in range(0,n):
+        enemy = Enemy.Enemy(86, 86)
+        enemy.set_xy((len(enemy_list) * offset), 0)
+        enemy_list.add(enemy)
+    return enemy_list
 
+def draw_list(list):
+    for _ in range(0, len(list)):
+        list[_].draw()
 
-# Create method holding all "update" actions
-def update(enemy_list, user):
-    for enemy in enemy_list:
-        enemy.draw(game_view)
-
-    user.draw(game_view)
-
+def update_game():
     pygame.display.update()
-    clock.tick(90)
+
+def update_user(user):
+    user.update()
+
+def update_enemies(enemy_list):
+    for enemy in enemy_list:
+        enemy.update()
+
+if __name__ == '__main__':
+    __main__()
+
